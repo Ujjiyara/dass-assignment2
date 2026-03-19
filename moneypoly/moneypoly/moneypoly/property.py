@@ -47,15 +47,20 @@ class Property:
         self.is_mortgaged = True
         return self.mortgage_value
 
+    def get_unmortgage_cost(self):
+        """Return the cost to unmortgage this property, or 0 if not mortgaged."""
+        if not self.is_mortgaged:
+            return 0
+        return int(self.mortgage_value * 1.1)
+
     def unmortgage(self):
         """
         Lift the mortgage on this property.
         Returns the cost (110 % of mortgage value), or 0 if not mortgaged.
         """
-        if not self.is_mortgaged:
-            return 0
-        cost = int(self.mortgage_value * 1.1)
-        self.is_mortgaged = False
+        cost = self.get_unmortgage_cost()
+        if cost > 0:
+            self.is_mortgaged = False
         return cost
 
     def is_available(self):
