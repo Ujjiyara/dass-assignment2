@@ -1,7 +1,7 @@
-import os
-
+"""
+Game module orchestrating the MoneyPoly game session.
+"""
 from moneypoly.config import (
-    GO_TO_JAIL_POSITION,
     JAIL_FINE,
     AUCTION_MIN_INCREMENT,
     INCOME_TAX_AMOUNT,
@@ -17,6 +17,7 @@ from moneypoly.cards import CardDeck, CHANCE_CARDS, COMMUNITY_CHEST_CARDS
 from moneypoly import ui
 
 
+# pylint: disable=too-many-instance-attributes
 class Game:
     """Manages the full state and flow of a MoneyPoly game session."""
 
@@ -82,33 +83,22 @@ class Game:
             player.go_to_jail()
             print(f"  {player.name} has been sent to Jail!")
 
-        elif tile == "income_tax":
-            player.deduct_money(INCOME_TAX_AMOUNT)
-            self.bank.collect(INCOME_TAX_AMOUNT)
-            print(f"  {player.name} paid income tax: ${INCOME_TAX_AMOUNT}.")
-
-        elif tile == "luxury_tax":
-            player.deduct_money(LUXURY_TAX_AMOUNT)
-            self.bank.collect(LUXURY_TAX_AMOUNT)
-            print(f"  {player.name} paid luxury tax: ${LUXURY_TAX_AMOUNT}.")
+        elif tile in ("income_tax", "luxury_tax"):
+            amt = INCOME_TAX_AMOUNT if tile == "income_tax" else LUXURY_TAX_AMOUNT
+            player.deduct_money(amt)
+            self.bank.collect(amt)
+            t_name = "income tax" if tile == "income_tax" else "luxury tax"
+            print(f"  {player.name} paid {t_name}: ${amt}.")
 
         elif tile == "free_parking":
             print(f"  {player.name} rests on Free Parking. Nothing happens.")
 
-        elif tile == "chance":
-            card = self.chance_deck.draw()
+        elif tile in ("chance", "community_chest"):
+            deck = self.chance_deck if tile == "chance" else self.community_deck
+            card = deck.draw()
             self._apply_card(player, card)
 
-        elif tile == "community_chest":
-            card = self.community_deck.draw()
-            self._apply_card(player, card)
-
-        elif tile == "railroad":
-            prop = self.board.get_property_at(position)
-            if prop is not None:
-                self._handle_property_tile(player, prop)
-
-        elif tile == "property":
+        elif tile in ("railroad", "property"):
             prop = self.board.get_property_at(position)
             if prop is not None:
                 self._handle_property_tile(player, prop)
@@ -292,6 +282,7 @@ class Game:
             print(f"  {player.name} rolled: {self.dice.describe()}")
             self._move_and_resolve(player, roll)
 
+    # pylint: disable=too-many-branches
     def _apply_card(self, player, card):
         """Apply the effect of a drawn Chance or Community Chest card."""
         if card is None:
@@ -378,7 +369,7 @@ class Game:
 
         winner = self.find_winner()
         if winner:
-            ui.print_banner(f"GAME OVER")
+            ui.print_banner("GAME OVER")
             print(f"\n  {winner.name} wins with a net worth of ${winner.net_worth()}!\n")
         else:
             print("\n  The game ended with no players remaining.")
@@ -401,7 +392,7 @@ class Game:
 
             if choice == 0:
                 break
-            elif choice == 1:
+            if choice == 1:
                 ui.print_standings(self.players)
             elif choice == 2:
                 ui.print_board_ownership(self.board)
@@ -450,7 +441,7 @@ class Game:
         for i, p in enumerate(others):
             print(f"  {i + 1}. {p.name}  (${p.balance})")
         idx = ui.safe_int_input("  Trade with: ", default=0) - 1
-        if not (0 <= idx < len(others)):
+        if not 0 <= idx < len(others):
             return
         partner = others[idx]
         if not player.properties:
@@ -459,7 +450,7 @@ class Game:
         for i, prop in enumerate(player.properties):
             print(f"  {i + 1}. {prop.name}")
         pidx = ui.safe_int_input("  Property to offer: ", default=0) - 1
-        if not (0 <= pidx < len(player.properties)):
+        if not 0 <= pidx < len(player.properties):
             return
         chosen_prop = player.properties[pidx]
         cash = ui.safe_int_input(
