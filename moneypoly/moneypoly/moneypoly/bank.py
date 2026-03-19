@@ -1,8 +1,14 @@
-import math
+"""
+Bank module for managing the MoneyPoly bank's funds, loans, and payouts.
+"""
 from moneypoly.config import BANK_STARTING_FUNDS
 
 
 class Bank:
+    """
+    Represents the MoneyPoly bank.
+    Handles the global reserves, collects player payments, and issues loans.
+    """
     def __init__(self):
         self._funds = BANK_STARTING_FUNDS
         self._loans_issued = []
