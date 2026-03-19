@@ -65,6 +65,10 @@ class Game:
 
         self._move_and_resolve(player, roll)
 
+        if getattr(player, 'is_eliminated', False):
+            self.advance_turn()
+            return
+
         # Rolling doubles earns an extra turn
         if self.dice.is_doubles():
             print(f"  Doubles! {player.name} rolls again.")
@@ -346,8 +350,12 @@ class Game:
                 prop.is_mortgaged = False
             player.properties.clear()
             if player in self.players:
+                idx = self.players.index(player)
                 self.players.remove(player)
-            if self.current_index >= len(self.players):
+                if idx <= self.current_index:
+                    self.current_index -= 1
+
+            if self.players and self.current_index >= len(self.players):
                 self.current_index = 0
 
     def find_winner(self):
