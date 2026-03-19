@@ -42,3 +42,22 @@ def test_game_trade_funds():
     assert buyer.balance == 1500 - 500
     # BUG TRIGGER: Seller didn't receive the cash!
     assert seller.balance == initial_seller_balance + 500, "Seller did not receive the cash from the trade!"
+
+def test_game_pay_rent_transfer():
+    game = Game(["Owner", "Renter"])
+    owner = game.players[0]
+    renter = game.players[1]
+    
+    prop = Property("Boardwalk", 39, 400, 50)
+    prop.owner = owner
+    owner.add_property(prop)
+    
+    initial_owner_balance = owner.balance
+    initial_renter_balance = renter.balance
+    
+    game.pay_rent(renter, prop)
+    
+    assert renter.balance == initial_renter_balance - 50
+    # BUG TRIGGER: Owner never receives the money!
+    assert owner.balance == initial_owner_balance + 50, "Owner did not receive the rent money!"
+
