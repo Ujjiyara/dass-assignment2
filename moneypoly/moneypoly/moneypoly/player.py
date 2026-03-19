@@ -1,7 +1,10 @@
-import sys
+"""
+Player module representing a participant in the MoneyPoly game.
+"""
 from moneypoly.config import STARTING_BALANCE, BOARD_SIZE, GO_SALARY, JAIL_POSITION
 
 
+# pylint: disable=too-many-instance-attributes
 class Player:
     """Represents a single player in a MoneyPoly game."""
 
@@ -45,9 +48,9 @@ class Player:
         old_position = self.position
         self.position = (self.position + steps) % BOARD_SIZE
 
-        if self.position == 0:
+        if self.position < old_position:
             self.add_money(GO_SALARY)
-            print(f"  {self.name} landed on Go and collected ${GO_SALARY}.")
+            print(f"  {self.name} landed on or passed Go and collected ${GO_SALARY}.")
 
         return self.position
 
