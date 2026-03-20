@@ -22,3 +22,11 @@ def test_integration_race_completion_and_prize():
     sys.results.record_result("Letty", 5000)
     assert sys.inv.cash == 5000
     assert sys.inv.get_cars()[0]["condition"] == 90
+
+def test_integration_mission_role_validation():
+    sys = StreetRaceManager()
+    with pytest.raises(ValueError):
+        sys.mission.start_mission("strategist", 1000)
+    sys.reg.register("Mia")
+    sys.crew.assign_role("Mia", "strategist", 80)
+    assert sys.mission.start_mission("strategist", 1000) is True
