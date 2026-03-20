@@ -98,7 +98,12 @@ class Game:
             print(f"  {player.name} paid {t_name}: ${amt}.")
 
         elif tile == "free_parking":
-            print(f"  {player.name} rests on Free Parking. Nothing happens.")
+            payout = self.bank.claim_tax_pool()
+            if payout > 0:
+                player.add_money(payout)
+                print(f"  {player.name} landed on Free Parking and collected a jackpot of ${payout}!")
+            else:
+                print(f"  {player.name} rests on Free Parking. Nothing happens.")
 
         elif tile in ("chance", "community_chest"):
             deck = self.chance_deck if tile == "chance" else self.community_deck

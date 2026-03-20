@@ -13,6 +13,7 @@ class Bank:
         self._funds = BANK_STARTING_FUNDS
         self._loans_issued = []
         self._total_collected = 0
+        self.tax_pool = 0
 
     def get_balance(self):
         """Return the bank's current cash reserves."""
@@ -27,6 +28,14 @@ class Bank:
             return
         self._funds += amount
         self._total_collected += amount
+        self.tax_pool += amount
+
+    def claim_tax_pool(self):
+        """Empty the tax pool and return its accumulated funds."""
+        amount = self.tax_pool
+        self.tax_pool = 0
+        self._funds -= amount
+        return amount
 
     def pay_out(self, amount):
         """

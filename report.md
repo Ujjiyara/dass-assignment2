@@ -115,3 +115,8 @@ This report documents the iterative changes made to the `moneypoly` codebase to 
 - **Test Case**: `test_cards_are_shuffled` simulates games to verify Chance and Community Chest cards are drawn in a randomized order.
 - **Error Found**: The decks were completely deterministic because `reshuffle()` was never called on `chance_deck` and `community_deck` at game start.
 - **Fix**: Appended `.reshuffle()` to both decks at the end of the `Game` constructor.
+
+## Error 14: Missing Tax Pool logic for Free Parking in `game.py` and `bank.py`
+- **Test Case**: `test_free_parking_tax_pool` verifies that landing on Free Parking awards the player all accumulated taxes and fines.
+- **Error Found**: The common Free Parking jackpot rule was missing, and money collected from taxes/fines was permanently swallowed by the bank instead of going to a tax pool.
+- **Fix**: Added `tax_pool` to `Bank` that accumulates all funds given to `collect()`. Updated `game.py` to award this pool to any player landing on Free Parking.
