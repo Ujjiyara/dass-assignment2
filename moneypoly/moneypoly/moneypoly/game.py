@@ -336,13 +336,13 @@ class Game:
 
         elif action == "birthday":
             for other in self.players:
-                if other != player and other.balance >= value:
+                if other != player:
                     other.deduct_money(value)
                     player.add_money(value)
 
         elif action == "collect_from_all":
             for other in self.players:
-                if other != player and other.balance >= value:
+                if other != player:
                     other.deduct_money(value)
                     player.add_money(value)
 

@@ -120,3 +120,8 @@ This report documents the iterative changes made to the `moneypoly` codebase to 
 - **Test Case**: `test_free_parking_tax_pool` verifies that landing on Free Parking awards the player all accumulated taxes and fines.
 - **Error Found**: The common Free Parking jackpot rule was missing, and money collected from taxes/fines was permanently swallowed by the bank instead of going to a tax pool.
 - **Fix**: Added `tax_pool` to `Bank` that accumulates all funds given to `collect()`. Updated `game.py` to award this pool to any player landing on Free Parking.
+
+## Error 15: Debts forgiven on Community Chest in `game.py`
+- **Test Case**: `test_community_chest_birthday_force_payment` ensures poor players are forced to pay even if it drops their balance negative.
+- **Error Found**: The `birthday` and `collect_from_all` card actions contained a bug `if other.balance >= value:` that completely skipped players who could not afford the fee, artificially protecting them from bankruptcy.
+- **Fix**: Removed the balance check so all players are forced to pay the owed amount regardless of their funds.
