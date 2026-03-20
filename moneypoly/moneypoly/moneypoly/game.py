@@ -31,6 +31,8 @@ class Game:
         self.running = True
         self.chance_deck = CardDeck(CHANCE_CARDS)
         self.community_deck = CardDeck(COMMUNITY_CHEST_CARDS)
+        self.chance_deck.reshuffle()
+        self.community_deck.reshuffle()
 
     def current_player(self):
         """Return the Player whose turn it currently is."""

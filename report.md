@@ -110,3 +110,8 @@ This report documents the iterative changes made to the `moneypoly` codebase to 
 - **Test Case**: `test_find_winner` verifies the player with the highest net worth wins.
 - **Error Found**: Python's `min()` was erroneously used to find the winner instead of `max()`, causing the poorest player to be declared the winner.
 - **Fix**: Replaced `min` with `max` in `find_winner()`.
+
+## Error 13: Deterministic Cards in `game.py`
+- **Test Case**: `test_cards_are_shuffled` simulates games to verify Chance and Community Chest cards are drawn in a randomized order.
+- **Error Found**: The decks were completely deterministic because `reshuffle()` was never called on `chance_deck` and `community_deck` at game start.
+- **Fix**: Appended `.reshuffle()` to both decks at the end of the `Game` constructor.
