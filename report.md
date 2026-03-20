@@ -105,3 +105,8 @@ This report documents the iterative changes made to the `moneypoly` codebase to 
 - **Test Case**: `test_game_buy_property_exact_balance` tests if a player can buy a property when their balance perfectly matches the price.
 - **Error Found**: The method `buy_property` checked `if player.balance <= prop.price:` to deny a purchase, meaning players with exact change were rejected.
 - **Fix**: Changed `<=` to `<` so players can spend all their money to buy a property.
+
+## Error 12: Incorrect logic in find_winner in `game.py`
+- **Test Case**: `test_find_winner` verifies the player with the highest net worth wins.
+- **Error Found**: Python's `min()` was erroneously used to find the winner instead of `max()`, causing the poorest player to be declared the winner.
+- **Fix**: Replaced `min` with `max` in `find_winner()`.
