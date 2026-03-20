@@ -14,3 +14,11 @@ def test_integration_missing_driver():
     sys.inv.add_car("Civic")
     with pytest.raises(ValueError):
         sys.race.enter_race("Street Sprint", "Brian")
+
+def test_integration_race_completion_and_prize():
+    sys = StreetRaceManager()
+    sys.inv.cash = 0
+    sys.inv.add_car("Silvia")
+    sys.results.record_result("Letty", 5000)
+    assert sys.inv.cash == 5000
+    assert sys.inv.get_cars()[0]["condition"] == 90
