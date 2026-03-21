@@ -90,3 +90,18 @@ This report documents the iterative changes made to the `moneypoly` codebase to 
 - **Test Case**: `test_game_bankruptcy_turn_skip` verifies that the player who is next in line does not lose their turn when the current player goes bankrupt.
 - **Error Found**: When a player was eliminated via bankruptcy, they were removed from the `self.players` list. This shifted all subsequent players down one index. Because `self.current_index` was not decremented, `advance_turn()` skipped the next player entirely. Also, if a bankrupt player rolled doubles, they incorrectly received an extra turn post-elimination.
 - **Fix**: Spliced logic to decrement `self.current_index` upon removal in `_check_bankruptcy()`, and guarded the doubles extra-turn mechanic against eliminated players.
+
+## Error 9: Extra Turn in Jail from Doubles in `game.py`
+- **Test Case**: `test_game_jail_doubles_no_extra_turn` tests if a player gets an extra turn while in jail if they got sent there by rolling doubles.
+- **Error Found**: When a player rolled doubles and landed on "Go to Jail", they were correctly sent to jail. However, `play_turn` unconditionally gave them an extra turn for rolling doubles, allowing them to instantly take their jail turn synchronously!
+- **Fix**: Added `and not player.in_jail` to the extra turn condition.
+
+## Error 10: Bleeding Doubles Streak in `game.py`
+- **Test Case**: `test_game_doubles_streak_reset` tests if the `doubles_streak` correctly resets when the turn passes to the next player.
+- **Error Found**: The `self.dice.doubles_streak` was never reset during `advance_turn()`. If Player 1 rolled doubles twice and their turn ended, Player 2 would inherit a streak of 2 and go to jail on their very first double!
+- **Fix**: Added `self.dice.doubles_streak = 0` to `advance_turn()`.
+
+## Error 11: Exact Change Off-By-One Bug in `game.py`
+- **Test Case**: `test_game_buy_property_exact_balance` tests if a player can buy a property when their balance perfectly matches the price.
+- **Error Found**: The method `buy_property` checked `if player.balance <= prop.price:` to deny a purchase, meaning players with exact change were rejected.
+- **Fix**: Changed `<=` to `<` so players can spend all their money to buy a property.

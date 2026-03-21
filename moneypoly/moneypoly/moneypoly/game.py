@@ -40,6 +40,7 @@ class Game:
         """Move to the next player in the rotation."""
         self.current_index = (self.current_index + 1) % len(self.players)
         self.turn_number += 1
+        self.dice.doubles_streak = 0
 
     def play_turn(self):
         """Execute one complete turn for the current player."""
@@ -69,8 +70,8 @@ class Game:
             self.advance_turn()
             return
 
-        # Rolling doubles earns an extra turn
-        if self.dice.is_doubles():
+        # Rolling doubles earns an extra turn (unless sent to jail)
+        if self.dice.is_doubles() and not player.in_jail:
             print(f"  Doubles! {player.name} rolls again.")
             return
 
@@ -131,7 +132,7 @@ class Game:
         Purchase `prop` on behalf of `player`.
         Returns True on success, False if the player cannot afford it.
         """
-        if player.balance <= prop.price:
+        if player.balance < prop.price:
             print(f"  {player.name} cannot afford {prop.name} (${prop.price}).")
             return False
         player.deduct_money(prop.price)
