@@ -39,3 +39,13 @@ def test_integration_mechanic_repair_mission():
     sys.crew.assign_role("Tej", "mechanic", 85)
     sys.mission.start_mission("mechanic", 2000)
     assert sys.inv.get_cars()[0]["condition"] == 100
+
+def test_integration_police_and_shop():
+    sys = StreetRaceManager()
+    sys.inv.cash = 50000
+    sys.shop.buy_car("Supra", 40000)
+    assert sys.inv.cash == 10000
+    sys.police.heat = 100
+    lost = sys.police.raid_hideout()
+    assert lost == 5000
+    assert sys.inv.cash == 5000
