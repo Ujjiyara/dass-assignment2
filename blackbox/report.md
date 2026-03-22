@@ -1,7 +1,7 @@
 # QuickCart API – Black Box Testing Report
 
 ## Summary
-Tested 103 endpoints/scenarios across 13 feature areas. Found **15 confirmed bugs** in the QuickCart REST API.
+Tested 110 endpoints/scenarios across 13 feature areas. Found **20 confirmed bugs** in the QuickCart REST API.
 
 ---
 
@@ -140,5 +140,9 @@ Tested 103 endpoints/scenarios across 13 feature areas. Found **15 confirmed bug
 - **Actual**: **200 OK** — multiple reviews allowed per user per product.
 - **Severity**: Low — data redundancy and rating manipulation.
 
----
-
+## Bug 20: Multiple Coupons Can Be Stacked on One Cart
+- **Endpoint**: `POST /api/v1/coupon/apply`
+- **Steps**: Apply coupon `WELCOME50` to a cart, then apply a second different coupon `SAVE200` to the same cart.
+- **Expected**: 400 error — only one coupon allowed per cart at a time.
+- **Actual**: **200 OK** — both coupon applications succeed, allowing multiple discounts.
+- **Severity**: High — allows users to stack multiple discounts, bypassing intended single-coupon business rules.
