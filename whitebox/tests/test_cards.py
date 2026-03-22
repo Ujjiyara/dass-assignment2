@@ -9,3 +9,17 @@ def test_cards_recycle_when_empty():
     card2 = deck.draw()
     assert card2 is not None, "Deck ran out of cards instead of recycling!"
     assert card1 == card2
+
+def test_cards_are_shuffled():
+    from moneypoly.game import Game
+    from moneypoly.cards import CHANCE_CARDS
+    # Verify decks are shuffled on game start, not identical to base deck
+    game = Game(["P1"])
+    # The chance deck might randomly be the same, but very unlikely for 12 cards
+    is_same = True
+    for i in range(len(CHANCE_CARDS)):
+        drawn = game.chance_deck.draw()
+        if drawn != CHANCE_CARDS[i]:
+            is_same = False
+            break
+    assert not is_same, "Decks were not shuffled during game initialization"

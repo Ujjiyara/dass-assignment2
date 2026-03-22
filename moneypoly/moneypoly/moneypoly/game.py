@@ -31,6 +31,8 @@ class Game:
         self.running = True
         self.chance_deck = CardDeck(CHANCE_CARDS)
         self.community_deck = CardDeck(COMMUNITY_CHEST_CARDS)
+        self.chance_deck.reshuffle()
+        self.community_deck.reshuffle()
 
     def current_player(self):
         """Return the Player whose turn it currently is."""
@@ -96,7 +98,12 @@ class Game:
             print(f"  {player.name} paid {t_name}: ${amt}.")
 
         elif tile == "free_parking":
-            print(f"  {player.name} rests on Free Parking. Nothing happens.")
+            payout = self.bank.claim_tax_pool()
+            if payout > 0:
+                player.add_money(payout)
+                print(f"  {player.name} landed on Free Parking and collected a jackpot of ${payout}!")
+            else:
+                print(f"  {player.name} rests on Free Parking. Nothing happens.")
 
         elif tile in ("chance", "community_chest"):
             deck = self.chance_deck if tile == "chance" else self.community_deck
@@ -329,13 +336,13 @@ class Game:
 
         elif action == "birthday":
             for other in self.players:
-                if other != player and other.balance >= value:
+                if other != player:
                     other.deduct_money(value)
                     player.add_money(value)
 
         elif action == "collect_from_all":
             for other in self.players:
-                if other != player and other.balance >= value:
+                if other != player:
                     other.deduct_money(value)
                     player.add_money(value)
 
