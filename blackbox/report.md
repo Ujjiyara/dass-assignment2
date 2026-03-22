@@ -109,3 +109,36 @@ Tested 103 endpoints/scenarios across 13 feature areas. Found **15 confirmed bug
 - **Expected**: Discount = $50 (10% of 500)
 - **Actual**: Discount shows **0** in cart
 - **Severity**: High — percent coupons don't update cart discount field
+
+---
+
+## Bug 16: Product Review without Purchase
+- **Endpoint**: `POST /api/v1/products/{id}/reviews`
+- **Steps**: Use a user ID with zero orders to submit a review for an expensive product.
+- **Expected**: 403 Forbidden or 400 Bad Request (must purchase before reviewing).
+- **Actual**: **200 OK** — review accepted.
+- **Severity**: Medium — allows fake/spam reviews.
+
+## Bug 17: Coupon Persistence after Cart Modification
+- **Endpoint**: `POST /api/v1/cart/remove`
+- **Steps**: Apply a coupon with min-cart requirement, then remove items so total drops below that requirement.
+- **Expected**: Coupon is automatically detached.
+- **Actual**: **Coupon stays applied**, potentially leading to negative cart totals or $0 total for valid items.
+- **Severity**: High — allows redeeming coupons without meeting price thresholds.
+
+## Bug 18: Inactive Product Addition to Cart
+- **Endpoint**: `POST /api/v1/cart/add`
+- **Steps**: Identify an inactive product via admin API and attempt to add it to a user's cart.
+- **Expected**: 404 or 400 error (product not available).
+- **Actual**: **200 OK** — inactive product added successfully.
+- **Severity**: Medium — users can buy products that should be disabled.
+
+## Bug 19: Duplicate Product Reviews
+- **Endpoint**: `POST /api/v1/products/{id}/reviews`
+- **Steps**: Submit two different reviews for the same product using the same user.
+- **Expected**: 400 error (review already exists).
+- **Actual**: **200 OK** — multiple reviews allowed per user per product.
+- **Severity**: Low — data redundancy and rating manipulation.
+
+---
+
