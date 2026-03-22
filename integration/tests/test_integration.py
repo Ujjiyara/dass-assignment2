@@ -30,3 +30,12 @@ def test_integration_mission_role_validation():
     sys.reg.register("Mia")
     sys.crew.assign_role("Mia", "strategist", 80)
     assert sys.mission.start_mission("strategist", 1000) is True
+
+def test_integration_mechanic_repair_mission():
+    sys = StreetRaceManager()
+    sys.inv.add_car("RX7")
+    sys.inv.get_cars()[0]["condition"] = 50
+    sys.reg.register("Tej")
+    sys.crew.assign_role("Tej", "mechanic", 85)
+    sys.mission.start_mission("mechanic", 2000)
+    assert sys.inv.get_cars()[0]["condition"] == 100
