@@ -12,7 +12,23 @@ whitebox/          ← Q1: White Box Testing (MoneyPoly)
   report.pdf       ← Report with pylint iterations + 15 errors
 
 integration/       ← Q2: Integration Testing (StreetRace Manager)
-...
+  diagrams/        ← Hand-drawn Call Graph
+  tests/           ← pytest integration tests
+  code/            ← StreetRace modules
+  report.pdf       ← Report with call graph + 8 test cases
+
+blackbox/          ← Q3: Black Box API Testing (QuickCart)
+  tests/           ← pytest API tests
+  report.pdf       ← Bug report with 20 confirmed bugs
+```
+
+## How to Run
+
+### Prerequisites
+- Python 3.12+
+- `pytest` and `requests` (`pip install pytest requests`)
+- Docker (for Q3 only)
+
 ### Q1: White Box Tests
 ```bash
 PYTHONPATH=whitebox/code pytest whitebox/tests/ -v
